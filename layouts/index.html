@@ -17,7 +17,7 @@
 <section class="sec" id="work"><div class="wrap">
     <span class="lab">{{ i18n "lab_work" }}</span>
     <div class="wgrid">
-        {{ range first 6 (where .Site.RegularPages "Section" "projects") }}
+        {{ range where .Site.RegularPages "Section" "projects" }}
         <a class="wc rv" href="{{ .RelPermalink }}">
             <div class="wh"><span>{{ if .Params.category }}{{ .Params.category }}{{ else }}PROJECT{{ end }}</span><span>No.{{ printf "%03d" .Weight }}</span></div>
             <div class="wb">
@@ -28,6 +28,7 @@
         </a>
         {{ end }}
     </div>
+    <p class="more-row"><a class="bb c" href="{{ "projects/" | relURL }}">{{ i18n "nav_projects" }} →</a></p>
 </div></section>
 
 <!-- 足迹 -->
