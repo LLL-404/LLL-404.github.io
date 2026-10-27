@@ -1,5 +1,5 @@
 # Hugo 站点配置文件
-baseURL = "https://LLL-404.github.io/personal-homepage/"
+baseURL = "https://LLL-404.github.io/"
 languageCode = "zh-cn"
 title = "LLL-404"
 
