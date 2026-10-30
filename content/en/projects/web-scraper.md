@@ -1,7 +1,7 @@
 ---
 title: "web-scraper"
 date: 2026-10-05
-weight: 7
+weight: 5
 draft: false
 description: "Four fetch pipelines for different anti-bot levels, with selector self-healing after a site rebuild."
 tags: ["Python", "Scraping", "Anti-bot"]
