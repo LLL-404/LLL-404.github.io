@@ -2,7 +2,7 @@
 title: "tapline"
 date: 2026-09-29
 weight: 6
-draft: false
+draft: true
 description: "A 60-90 second single-input reaction game exploring TapTap ad monetization. Private repo."
 tags: ["Godot", "C#", "Mini game"]
 category: "Game prototype"
