@@ -2,7 +2,7 @@
 title: "warden"
 date: 2026-09-28
 weight: 5
-draft: false
+draft: true
 description: "WarCraft-style PVE symmetric dual-core attack/defense: hero control + RTS building defense + lane-choice roguelike. Private repo."
 tags: ["Godot", "C#", "RTS"]
 category: "Game prototype"
