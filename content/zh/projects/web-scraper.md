@@ -1,7 +1,7 @@
 ---
 title: "web-scraper"
 date: 2026-10-05
-weight: 7
+weight: 5
 draft: false
 description: "四条取页链路对抗不同强度反爬，选择器失效后还能靠特征库把数据找回来。"
 tags: ["Python", "爬虫", "反爬对抗"]
