@@ -11,6 +11,7 @@ resources/_gen/
 # AI 工具会话产物
 .superpowers/
 .workbuddy/
+.mimosa/
 
 # 操作系统
 .DS_Store

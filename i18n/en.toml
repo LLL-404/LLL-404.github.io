@@ -93,3 +93,20 @@ other = "中文"
 other = "ABOUT · About"
 [lab_contact]
 other = "CONTACT · Reach me"
+
+[filler_gh_title]
+other = "More over there"
+[filler_gh_desc]
+other = "Experimental repos, build notes and small tools that never made it to this site — all live on GitHub."
+[filler_psst_head]
+other = "PSST"
+[filler_psst_title]
+other = "Something playable is hidden here"
+[filler_psst_desc]
+other = "Visit any URL that doesn't exist — there's a game of Breakout under the 404 page."
+[filler_psst_tag]
+other = "EASTER EGG"
+[filler_blog_title]
+other = "Blog in progress →"
+[filler_blog_desc]
+other = "How this site got built — the process lives in the blog."

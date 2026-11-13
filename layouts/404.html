@@ -2,10 +2,14 @@
 <div class="nf">
     <span class="lab">ERROR · 404</span>
     <div class="n">404</div>
-    <p style="font-weight:700">这一页还没造出来。</p>
+    <p style="font-weight:700">这一页还没造出来。不过下面这局是真的能玩。</p>
     <div class="acts">
         <a class="bb y" href="{{ .Site.Home.RelPermalink }}">← {{ i18n "nav_home" }}</a>
-        <a class="bb c" href="{{ "projects/" | relURL }}">{{ i18n "nav_projects" }}</a>
+        <a class="bb c" href="{{ "projects/" | relLangURL }}">{{ i18n "nav_projects" }}</a>
+    </div>
+    <div class="bk-wrap">
+        <canvas id="bk" width="560" height="340" role="img" aria-label="打砖块小游戏：方向键移动挡板，空格发球"></canvas>
+        <p class="bk-hint">SPACE 发球 · ← → 移动 · 手机直接在框里拖 · 撞光砖块算赢</p>
     </div>
 </div>
 {{ end }}

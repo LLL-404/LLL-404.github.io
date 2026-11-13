@@ -138,4 +138,53 @@ footer .fin{display:flex;justify-content:space-between;font-family:var(--disp);f
     .badge{position:static;display:inline-block;transform:rotate(2deg);margin-bottom:18px}
     .hero{padding:44px 0 50px}
 }
+
+/* ========== 主题按钮（亮暗共用） ========== */
+.theme-btn{cursor:pointer;background:var(--pk);color:#141414}
+.mtheme{display:block;width:100%;text-align:left;font-family:var(--disp);font-size:2rem;background:none;border:0;border-bottom:2px solid #333;padding:12px 0;color:var(--paper);cursor:pointer}
+
+/* 404 打砖块 */
+.bk-wrap{margin-top:6px}
+.bk-wrap canvas{display:block;max-width:100%;border:var(--b) solid var(--ink);box-shadow:var(--sh);background:var(--paper);touch-action:none;cursor:crosshair}
+.bk-hint{font-size:.72rem;font-weight:700;margin-top:10px}
+
+/* ========== DARK MODE（11-11）==========
+   思路：只换 --ink/--paper 两个变量，边框/硬阴影/文字全自动反色；
+   彩色底（黄粉青绿）上的字在暗色下保持深色，与亮色一致。 */
+[data-theme="dark"]{--ink:#f2efe4;--paper:#101014}
+[data-theme="dark"] ::selection{background:var(--y);color:#141414}
+[data-theme="dark"] .mq{background:#000}
+[data-theme="dark"] .wc,[data-theme="dark"] .postrow,[data-theme="dark"] .prose table{background:#1a1a20}
+[data-theme="dark"] .sub,[data-theme="dark"] .lead,[data-theme="dark"] .wb .d,[data-theme="dark"] .sdesc,[data-theme="dark"] .bk-hint{color:#b9b5a7}
+[data-theme="dark"] .mnav{background:#0a0a0c}
+[data-theme="dark"] .mnav a,[data-theme="dark"] .mtheme{color:var(--ink);border-color:#2e2e34}
+[data-theme="dark"] .prose code{color:#52640f}
+[data-theme="dark"] .prose a:hover{color:#141414}
+[data-theme="dark"] .bb,[data-theme="dark"] .nlink.on,[data-theme="dark"] .nlink.gh,[data-theme="dark"] .brand small,[data-theme="dark"] .badge,[data-theme="dark"] .hl,[data-theme="dark"] .wh,[data-theme="dark"] .jc,[data-theme="dark"] .wc .tags .tag:nth-child(1),[data-theme="dark"] .postrow .dt,[data-theme="dark"] .stitle,[data-theme="dark"] .ptitle em,[data-theme="dark"] .prose th,[data-theme="dark"] .prose blockquote,[data-theme="dark"] .cta .box,[data-theme="dark"] .mclose,[data-theme="dark"] .burger,[data-theme="dark"] .nf .n,[data-theme="dark"] .tchip{color:#141414}
+
+/* ========== 桌面密度（2026-11-12）：大屏别让内容柱孤零零 1100px ========== */
+@media (min-width:1400px){
+    .wrap{max-width:1320px}
+    h1{font-size:clamp(2.6rem,5vw,5.2rem)}
+    .sub{max-width:680px}
+    .wgrid,.jgrid{gap:24px}
+}
+/* 空槽补位卡：虚线框 = 待填，hover 转正举卡，和实卡一眼区分 */
+.wc.filler,.jc.filler{background:transparent;border-style:dashed;box-shadow:none}
+.wc.filler .wh{background:var(--paper);border-bottom-style:dashed}
+.wc.filler:hover,.jc.filler:hover{border-style:solid;box-shadow:var(--sh)}
+[data-theme="dark"] .wc.filler:hover,[data-theme="dark"] .jc.filler:hover{background:#1a1a20}
+/* 补位卡头部是 paper 底（盖过 nth-child 彩色规则），暗色下若沿用深字清单会深压深隐形 */
+[data-theme="dark"] .wc.filler .wh{background:#1a1a20;color:var(--ink)}
+/* 同理：透明底的 .jc 补位卡文字被彩色卡的深字清单连带，得单独拉回亮字 */
+[data-theme="dark"] .jc.filler{color:var(--ink)}
+[data-theme="dark"] .jc.filler .d{color:#b9b5a7}
+/* 404 大屏居中，别整列贴在左边 */
+.nf{max-width:1100px;margin:0 auto}
 </style>
+<script>
+/* 防闪白：样式加载后立刻定主题，正文渲染前生效 */
+(function(){try{var t=localStorage.getItem('theme');
+if(t==='dark'||(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches))
+document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
+</script>

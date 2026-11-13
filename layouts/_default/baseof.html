@@ -14,6 +14,7 @@
 </head>
 <body>
     {{ partial "header.html" . }}
+    <script>/* 暗色用户首帧就纠正按钮文案，别等页尾脚本 */(function(){try{var d=document.documentElement.getAttribute('data-theme')==='dark';document.querySelectorAll('[data-theme-btn]').forEach(function(b){b.textContent=d?'☀ LIGHT':'☾ DARK';});}catch(e){}})();</script>
     {{ block "main" . }}{{ end }}
     {{ partial "footer.html" . }}
     {{ partial "scripts.html" . }}

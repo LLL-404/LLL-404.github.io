@@ -7,11 +7,12 @@
     <a class="brand" href="{{ .Site.Home.RelPermalink }}">LLL-404 <small>{{ i18n "brand_sub" }}</small></a>
     <nav class="nlinks">
         <a class="nlink {{ if .IsHome }}on{{ end }}" href="{{ .Site.Home.RelPermalink }}">{{ i18n "nav_home" }}</a>
-        <a class="nlink {{ if (hasPrefix .RelPermalink "/projects") }}on{{ end }}" href="{{ "projects/" | relURL }}">{{ i18n "nav_projects" }}</a>
-        <a class="nlink {{ if (hasPrefix .RelPermalink "/posts") }}on{{ end }}" href="{{ "posts/" | relURL }}">{{ i18n "nav_blog" }}</a>
-        <a class="nlink {{ if (hasPrefix .RelPermalink "/resume") }}on{{ end }}" href="{{ "resume/" | relURL }}">{{ i18n "nav_resume" }}</a>
-        <a class="nlink {{ if (hasPrefix .RelPermalink "/about") }}on{{ end }}" href="{{ "about/" | relURL }}">{{ i18n "nav_about" }}</a>
-        <a class="nlink {{ if (hasPrefix .RelPermalink "/contact") }}on{{ end }}" href="{{ "contact/" | relURL }}">{{ i18n "nav_contact" }}</a>
+        <a class="nlink {{ if (hasPrefix .RelPermalink "/projects") }}on{{ end }}" href="{{ "projects/" | relLangURL }}">{{ i18n "nav_projects" }}</a>
+        <a class="nlink {{ if (hasPrefix .RelPermalink "/posts") }}on{{ end }}" href="{{ "posts/" | relLangURL }}">{{ i18n "nav_blog" }}</a>
+        <a class="nlink {{ if (hasPrefix .RelPermalink "/resume") }}on{{ end }}" href="{{ "resume/" | relLangURL }}">{{ i18n "nav_resume" }}</a>
+        <a class="nlink {{ if (hasPrefix .RelPermalink "/about") }}on{{ end }}" href="{{ "about/" | relLangURL }}">{{ i18n "nav_about" }}</a>
+        <a class="nlink {{ if (hasPrefix .RelPermalink "/contact") }}on{{ end }}" href="{{ "contact/" | relLangURL }}">{{ i18n "nav_contact" }}</a>
+        <button type="button" class="nlink theme-btn" data-theme-btn aria-label="切换暗色主题">☾ DARK</button>
         <a class="nlink gh" href="https://github.com/LLL-404" target="_blank" rel="noopener">{{ i18n "nav_github" }}</a>
     </nav>
     <button class="burger" id="burger" aria-label="menu" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -19,10 +20,11 @@
 <nav class="mnav" id="mnav">
     <button class="mclose" id="mclose">✕</button>
     <a href="{{ .Site.Home.RelPermalink }}">{{ i18n "nav_home" }}</a>
-    <a href="{{ "projects/" | relURL }}">{{ i18n "nav_projects" }}</a>
-    <a href="{{ "posts/" | relURL }}">{{ i18n "nav_blog" }}</a>
-    <a href="{{ "resume/" | relURL }}">{{ i18n "nav_resume" }}</a>
-    <a href="{{ "about/" | relURL }}">{{ i18n "nav_about" }}</a>
-    <a href="{{ "contact/" | relURL }}">{{ i18n "nav_contact" }}</a>
+    <a href="{{ "projects/" | relLangURL }}">{{ i18n "nav_projects" }}</a>
+    <a href="{{ "posts/" | relLangURL }}">{{ i18n "nav_blog" }}</a>
+    <a href="{{ "resume/" | relLangURL }}">{{ i18n "nav_resume" }}</a>
+    <a href="{{ "about/" | relLangURL }}">{{ i18n "nav_about" }}</a>
+    <a href="{{ "contact/" | relLangURL }}">{{ i18n "nav_contact" }}</a>
+    <button type="button" class="mtheme" data-theme-btn aria-label="切换暗色主题">☾ DARK</button>
     <a href="https://github.com/LLL-404" target="_blank" rel="noopener" style="color:var(--y)">{{ i18n "nav_github" }}</a>
 </nav>

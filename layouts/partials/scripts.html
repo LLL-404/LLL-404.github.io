@@ -12,4 +12,179 @@
     if(b&&m){ b.addEventListener('click',function(){m.classList.add('open');}); }
     if(x&&m){ x.addEventListener('click',function(){m.classList.remove('open');}); }
 })();
+
+/* ========== 主题开关（亮/暗，localStorage 记忆 + 系统偏好兜底） ========== */
+(function(){
+    var tbs=document.querySelectorAll('[data-theme-btn]');
+    if(!tbs.length)return;
+    function isDark(){return document.documentElement.getAttribute('data-theme')==='dark';}
+    function syncLabel(){var t=isDark()?'☀ LIGHT':'☾ DARK';
+        tbs.forEach(function(b){b.textContent=t;});}
+    function setTheme(t){
+        if(t==='dark')document.documentElement.setAttribute('data-theme','dark');
+        else document.documentElement.removeAttribute('data-theme');
+        try{localStorage.setItem('theme',t);}catch(e){}
+        syncLabel();
+        try{dispatchEvent(new CustomEvent('themechange'));}catch(e){}
+    }
+    tbs.forEach(function(b){b.addEventListener('click',function(){setTheme(isDark()?'light':'dark');});});
+    syncLabel();
+})();
+
+/* ========== 项目卡 3D 倾斜（只桌面精确指针，尊重 reduced-motion） ========== */
+(function(){
+    if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    document.querySelectorAll('.wc,.jc').forEach(function(c){
+        c.addEventListener('mousemove',function(ev){
+            var r=c.getBoundingClientRect(),
+                x=(ev.clientX-r.left)/r.width-.5,
+                y=(ev.clientY-r.top)/r.height-.5;
+            /* .rv.in 的 .55s 过渡会盖过卡自身的 .14s——倾斜期间临时加速，离开时还原 */
+            c.style.transition='transform .1s ease-out,box-shadow .14s';
+            /* 补上 CSS hover 的位移分量，避免进卡瞬间 X 向回跳（.wc 是 -4，.jc 是 -3） */
+            var d=c.classList.contains('jc')?-3:-4;
+            c.style.transform='perspective(700px) rotateX('+(-y*6).toFixed(2)+'deg) rotateY('+(x*6).toFixed(2)+'deg) translate('+d+'px,'+d+'px)';
+        });
+        c.addEventListener('mouseleave',function(){c.style.transition='';c.style.transform='';});
+    });
+})();
+
+/* ========== 404 打砖块（只有 404 页有 #bk，其他页直接返回） ========== */
+(function(){
+    var cv=document.getElementById('bk');
+    if(!cv||!cv.getContext)return;
+    var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+
+    /* 颜色跟 CSS 变量走：暗色开关切过来，画布跟着换 */
+    var C={};
+    function readCol(){var cs=getComputedStyle(document.documentElement);
+        C.paper=cs.getPropertyValue('--paper').trim();C.ink=cs.getPropertyValue('--ink').trim();
+        C.y=cs.getPropertyValue('--y').trim();C.pk=cs.getPropertyValue('--pk').trim();
+        C.cy=cs.getPropertyValue('--cy').trim();C.gn=cs.getPropertyValue('--gn').trim();}
+    readCol();
+    addEventListener('themechange',readCol);
+
+    var COLS=8,ROWS=5,BW=60,BH=20,GAP=6,TOP=48,LEFT=(W-(COLS*(BW+GAP)-GAP))/2;
+    var PW=92,PH=14,PY=H-36,BS=12;
+    var AC=[function(){return C.y},function(){return C.cy},function(){return C.pk},function(){return C.gn}];
+    var bricks,paddle,ball,lives,score,mode;
+    var keys={l:false,r:false};
+
+    function reset(){
+        bricks=[];
+        for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++)
+            bricks.push({x:LEFT+c*(BW+GAP),y:TOP+r*(BH+GAP),c:AC[r%4],on:true});
+        paddle={x:(W-PW)/2};
+        ball={x:0,y:0,vx:0,vy:0,stuck:true};
+        lives=3;score=0;mode='ready';
+    }
+    function serve(){
+        if(mode!=='ready'&&mode!=='pause')return;
+        mode='play';
+        if(ball.stuck){
+            ball.x=paddle.x+PW/2-BS/2;ball.y=PY-BS-1;
+            ball.vx=(Math.random()<.5?-1:1)*3;ball.vy=-4.2;ball.stuck=false;
+        }
+    }
+    reset();
+
+    function hit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
+
+    function step(){
+        /* 挡板移动与贴板跟随在 ready/play 都生效，发球前就能用 ←→ 瞄准 */
+        if(keys.l)paddle.x-=7;
+        if(keys.r)paddle.x+=7;
+        paddle.x=Math.max(4,Math.min(W-PW-4,paddle.x));
+        if(ball.stuck){ball.x=paddle.x+PW/2-BS/2;ball.y=PY-BS-1;}
+        if(mode!=='play')return;
+        ball.x+=ball.vx;ball.y+=ball.vy;
+        if(ball.x<4){ball.x=4;ball.vx=Math.abs(ball.vx);}
+        if(ball.x+BS>W-4){ball.x=W-4-BS;ball.vx=-Math.abs(ball.vx);}
+        if(ball.y<6){ball.y=6;ball.vy=Math.abs(ball.vy);}
+        var p={x:paddle.x,y:PY,w:PW,h:PH},b={x:ball.x,y:ball.y,w:BS,h:BS};
+        if(hit(b,p)&&ball.vy>0){
+            ball.vy=-Math.abs(ball.vy);
+            ball.vx+=((ball.x+BS/2)-(paddle.x+PW/2))/PW*4;
+            ball.vx=Math.max(-5,Math.min(5,ball.vx));
+        }
+        for(var i=0;i<bricks.length;i++){var k=bricks[i];
+            if(!k.on)continue;
+            if(hit(b,{x:k.x,y:k.y,w:BW,h:BH})){
+                k.on=false;score+=10;ball.vy=-ball.vy;
+                var sp=Math.sqrt(ball.vx*ball.vx+ball.vy*ball.vy);
+                if(sp<7.5){ball.vx*=1.015;ball.vy*=1.015;}
+                break;
+            }}
+        if(!bricks.some(function(k){return k.on})){mode='win';return;}
+        if(ball.y>H+20){
+            lives--;
+            if(lives<=0)mode='over';
+            else{ball.stuck=true;mode='ready';}
+        }
+    }
+
+    function draw(){
+        ctx.fillStyle=C.paper;ctx.fillRect(0,0,W,H);
+        ctx.strokeStyle=C.ink;ctx.lineWidth=3;
+        for(var i=0;i<bricks.length;i++){var k=bricks[i];
+            if(!k.on)continue;
+            ctx.fillStyle=k.c();ctx.fillRect(k.x,k.y,BW,BH);
+            ctx.strokeRect(k.x+1.5,k.y+1.5,BW-3,BH-3);}
+        ctx.fillStyle=C.ink;
+        ctx.fillRect(paddle.x,PY,PW,PH);
+        ctx.fillStyle=C.y;ctx.fillRect(ball.x,ball.y,BS,BS);
+        ctx.strokeStyle=C.ink;ctx.strokeRect(ball.x+.5,ball.y+.5,BS-1,BS-1);ctx.strokeStyle=C.ink;
+        ctx.font='700 13px "JetBrains Mono",monospace';ctx.textBaseline='middle';
+        ctx.textAlign='left';ctx.fillText('SCORE '+score,10,20);
+        for(var j=0;j<lives;j++)ctx.fillRect(W-14-j*16,14,10,10);
+        if(mode!=='play'){
+            ctx.textAlign='center';
+            ctx.font='24px "Archivo Black","Noto Sans SC",sans-serif';
+            var msg=mode==='ready'?'SPACE / 点按发球'
+                   :mode==='pause'?'PAUSED — SPACE 继续'
+                   :mode==='over'?'GAME OVER — SPACE 重来'
+                   :'CLEARED! — SPACE 再来';
+            /* 提示画在砖阵下方、挡板上方的空档里，衬一块纸底别压砖 */
+            var my=H-72,w=ctx.measureText(msg).width+36;
+            ctx.fillStyle=C.paper;ctx.fillRect(W/2-w/2,my-24,w,44);
+            ctx.strokeStyle=C.ink;ctx.strokeRect(W/2-w/2,my-24,w,44);
+            ctx.fillStyle=C.ink;
+            ctx.fillText(msg,W/2,my);
+        }
+    }
+    function frame(){step();draw();requestAnimationFrame(frame);}
+    requestAnimationFrame(frame);
+
+    addEventListener('keydown',function(e){
+        /* 焦点在链接/按钮/表单上时别拦空格——404 页 Space 激活按钮要留着 */
+        if(e.target&&e.target.closest&&e.target.closest('a,button,input,textarea,select'))return;
+        if(e.code==='ArrowLeft'){keys.l=true;e.preventDefault();}
+        else if(e.code==='ArrowRight'){keys.r=true;e.preventDefault();}
+        else if(e.code==='Space'){
+            if(mode==='ready'||mode==='pause')serve();
+            else if(mode==='over'||mode==='win')reset();
+            e.preventDefault();
+        }
+    });
+    addEventListener('keyup',function(e){
+        if(e.code==='ArrowLeft')keys.l=false;
+        if(e.code==='ArrowRight')keys.r=false;
+    });
+    function px(ev){var r=cv.getBoundingClientRect();return (ev.clientX-r.left)*(W/r.width);}
+    cv.addEventListener('pointerdown',function(ev){
+        if(cv.setPointerCapture)try{cv.setPointerCapture(ev.pointerId);}catch(e){}
+        paddle.x=Math.max(4,Math.min(W-PW-4,px(ev)-PW/2));
+        if(mode==='ready'||mode==='pause')serve();
+        else if(mode==='over'||mode==='win')reset();
+        ev.preventDefault();
+    });
+    cv.addEventListener('pointermove',function(ev){
+        if(ev.buttons||ev.pointerType==='touch')
+            paddle.x=Math.max(4,Math.min(W-PW-4,px(ev)-PW/2));
+    });
+    document.addEventListener('visibilitychange',function(){
+        if(document.hidden&&mode==='play')mode='pause';
+    });
+})();
 </script>

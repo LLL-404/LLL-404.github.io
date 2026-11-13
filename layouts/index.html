@@ -8,7 +8,7 @@
     </h1>
     <p class="sub rv d1">{{ i18n "hero_bio" }}</p>
     <div class="acts rv d2">
-        <a class="bb y" href="{{ "projects/" | relURL }}">{{ i18n "nav_projects" }} →</a>
+        <a class="bb y" href="{{ "projects/" | relLangURL }}">{{ i18n "nav_projects" }} →</a>
         <a class="bb c" href="https://github.com/LLL-404" target="_blank" rel="noopener">{{ i18n "nav_github" }}</a>
     </div>
 </div></section>
@@ -17,7 +17,8 @@
 <section class="sec" id="work"><div class="wrap">
     <span class="lab">{{ i18n "lab_work" }}</span>
     <div class="wgrid">
-        {{ range where .Site.RegularPages "Section" "projects" }}
+        {{ $projects := where .Site.RegularPages "Section" "projects" }}
+        {{ range $projects }}
         <a class="wc rv" href="{{ .RelPermalink }}">
             <div class="wh"><span>{{ if .Params.category }}{{ .Params.category }}{{ else }}PROJECT{{ end }}</span><span>No.{{ printf "%03d" .Weight }}</span></div>
             <div class="wb">
@@ -27,18 +28,46 @@
             </div>
         </a>
         {{ end }}
+        {{ $m := mod (len $projects) 3 }}
+        {{ if ne $m 0 }}
+        <a class="wc filler rv" href="https://github.com/LLL-404" target="_blank" rel="noopener">
+            <div class="wh"><span>GITHUB</span><span>↗</span></div>
+            <div class="wb">
+                <p class="t">{{ i18n "filler_gh_title" }}</p>
+                <p class="d">{{ i18n "filler_gh_desc" }}</p>
+                <div class="tags"><span class="tag">OPEN SOURCE</span></div>
+            </div>
+        </a>
+        {{ end }}
+        {{ if eq $m 1 }}
+        <a class="wc filler rv" href="{{ "404.html" | relLangURL }}">
+            <div class="wh"><span>{{ i18n "filler_psst_head" }}</span><span>★</span></div>
+            <div class="wb">
+                <p class="t">{{ i18n "filler_psst_title" }}</p>
+                <p class="d">{{ i18n "filler_psst_desc" }}</p>
+                <div class="tags"><span class="tag">{{ i18n "filler_psst_tag" }}</span></div>
+            </div>
+        </a>
+        {{ end }}
     </div>
-    <p class="more-row"><a class="bb c" href="{{ "projects/" | relURL }}">{{ i18n "nav_projects" }} →</a></p>
+    <p class="more-row"><a class="bb c" href="{{ "projects/" | relLangURL }}">{{ i18n "nav_projects" }} →</a></p>
 </div></section>
 
 <!-- 足迹 -->
 <section class="sec" id="journey"><div class="wrap">
     <span class="lab">{{ i18n "lab_journey" }}</span>
     <div class="jgrid">
-        {{ range where .Site.RegularPages "Section" "resume" }}
+        {{ $resume := where .Site.RegularPages "Section" "resume" }}
+        {{ range $resume }}
         <a class="jc rv" href="{{ .RelPermalink }}">
             <p class="t">{{ .Title }}</p>
             <p class="d">{{ .Description }}</p>
+        </a>
+        {{ end }}
+        {{ if ne (mod (len $resume) 3) 0 }}
+        <a class="jc filler rv" href="{{ "posts/" | relLangURL }}">
+            <p class="t">{{ i18n "filler_blog_title" }}</p>
+            <p class="d">{{ i18n "filler_blog_desc" }}</p>
         </a>
         {{ end }}
     </div>

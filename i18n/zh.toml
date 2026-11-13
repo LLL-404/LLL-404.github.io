@@ -93,3 +93,20 @@ other = "English"
 other = "关于 · ABOUT"
 [lab_contact]
 other = "联系 · CONTACT"
+
+[filler_gh_title]
+other = "还有更多在那边"
+[filler_gh_desc]
+other = "实验仓库、构建笔记和没搬过来的小工具，都在 GitHub 上。"
+[filler_psst_head]
+other = "PSST"
+[filler_psst_title]
+other = "这站藏了个能玩的"
+[filler_psst_desc]
+other = "随手戳一个不存在的路径——404 页下面藏了一局打砖块。"
+[filler_psst_tag]
+other = "彩蛋"
+[filler_blog_title]
+other = "博客在写 →"
+[filler_blog_desc]
+other = "这个站是怎么造出来的，过程记在博客里。"
