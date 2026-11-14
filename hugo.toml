@@ -1,6 +1,5 @@
 # Hugo 站点配置文件
 baseURL = "https://LLL-404.github.io/"
-languageCode = "zh-cn"
 title = "LLL-404"
 
 # 双语配置
@@ -11,13 +10,13 @@ disableKinds = ["taxonomy", "term"]
 [languages]
 # 中文（默认语言）
 [languages.zh]
-languageName = "中文"
+label = "中文"
 weight = 1
 contentDir = "content/zh"
 
 # 英文
 [languages.en]
-languageName = "English"
+label = "English"
 weight = 2
 contentDir = "content/en"
 
